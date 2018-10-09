@@ -15,7 +15,7 @@ Implement a cross-validation approach:
 1. k-fold cross validation
 
 # Bonus
-Get a good score on the parametric linear model modeling for bonus credit.
+Get a good score on the parametric linear model modeling for bonus credit
 
 # RESULTS
 Ridge regression: 3.88509
