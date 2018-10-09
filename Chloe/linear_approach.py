@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from textblob import TextBlob
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import Ridge, RidgeCV
+from sklearn.linear_model import Ridge, Lasso, RidgeCV, LassoCV
 
 # Read in raw datasets
 raw_train = pd.read_csv('train.csv')
@@ -100,7 +100,7 @@ x_test = final_data.iloc[len(y_train):,]
 # Validation
 x_train_2, x_cv, y_train_2, y_cv = train_test_split(x_train, y_train,test_size=0.33, random_state=42)
 
-# Implement the ridge regression
+# 1. Ridge regression
 
 # Select the best alpha using the entire training set
 alphas = np.arange(0.01,10,0.01)    
@@ -116,7 +116,31 @@ mse = np.mean((pred - y_cv.values)**2)          # Calculates the mean squared er
 mse  
 # 0.046682854551005175
 
+# 2. Lasso Regression
+alphas = np.arange(0.01,10,0.01)    
+lasso_cv = LassoCV(alphas=alphas)
+cv_score = lasso_cv.fit(x_train, y_train)
+cv_score.alpha_
+# 0.01
+
+lasso = Lasso(alpha=0.01)
+lasso.fit(x_train_2,y_train_2)
+pred = lasso.predict(x_cv)                      # Uses the validation set for prediction
+mse = np.mean((pred - y_cv.values)**2)          # Calculates the mean squared error
+mse  
+# 0.12652654108841907
+
+# Cross Validation
 ridge.fit(x_train,y_train)
+scores = cross_val_score(ridge, x_train, y_train, cv=5)
+np.mean(scores)
+# 0.5786084480390266
+
+lasso.fit(x_train, y_train)
+scores = cross_val_score(lasso, x_train, y_train, cv=5)
+np.mean(scores)
+# 0.23141438593413274
+
 df_ridge = pd.DataFrame(np.expm1(ridge.predict(x_test)))
 
 predictions = pd.DataFrame()
