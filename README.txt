@@ -26,9 +26,11 @@ Data: All of the cleaned data.
 Final_submission: All of the final submissions for Kaggle
 
 # Code
+# new_blog_script.py: Reads in the raw dataset and conducts basic text analysis
 # data_cleaning.py: Reads in the raw dataset and conducts data prepocessing
 # tfidf.R: Reads in the raw dataset and calculates the term frequency-inverse document frequency.
 # linear_model.py: Reads in the cleaned data and tfidf data. Builds the final model.
+
 
 # Final_submission
 # blog_result_1008_v4.csv: the result with best score
