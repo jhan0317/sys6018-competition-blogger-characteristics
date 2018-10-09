@@ -43,4 +43,4 @@ dim(tfidf.80)
 
 # Export the terms to csv file
 df_tfidf.80 = as.matrix(tfidf.80)
-write.csv(df_tfidf.80, file = "tfidf80.csv")
+write.csv(df_tfidf.80, file = "tfidf80.csv")  # The csv file is too large to be uploaded to gitHub
