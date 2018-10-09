@@ -21,14 +21,14 @@ Get a good score on the parametric linear model modeling for bonus credit.
 Ridge regression: 3.88509
 
 # FILES
-code: All of the code.
-data: All of the cleaned data.
-final_submission_results: All of the final submissions for Kaggle
+Code: All of the code.
+Data: All of the cleaned data.
+Final_submission: All of the final submissions for Kaggle
 
-# code
+# Code
 # data_cleaning.py: Reads in the raw dataset and conducts data prepocessing
 # tfidf.R: Reads in the raw dataset and calculates the term frequency-inverse document frequency.
 # linear_model.py: Reads in the cleaned data and tfidf data. Builds the final model.
 
-# final_submission results
+# Final_submission
 # blog_result_1008_v4.csv: the result with best score
