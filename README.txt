@@ -28,11 +28,11 @@ Large-size datasets: Some datasets are too large to be uploaded to github and ar
                      https://drive.google.com/open?id=1M1bk-_DDEJxfOb7HrCpxgM712CoAm9zU
 
 # Code
-# new_blog_script.py: Reads in the raw dataset and conducts basic text analysis
+# initial_data_analysis.py: Reads in the raw dataset and finds trends in the text data, specifically in relation to the 'age' variable
 # data_cleaning.py: Reads in the raw dataset and conducts data prepocessing
 # text_mining.py: Reads in the raw dataset, aggregates the dataset and conducts basic text cleaning
 # tfidf.R: Reads in the cleaned text and calculates the term frequency-inverse document frequency
-# linear_model.py: Reads in the cleaned data and tfidf data. Builds the final model
+# linear_model.py: Reads in the cleaned data and tfidf data. Builds the final model based off of analysis conducted in other .py files
 
 
 # Final_submission
