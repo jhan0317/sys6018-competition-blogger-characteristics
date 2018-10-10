@@ -3,39 +3,25 @@ library(NLP)
 library(tm)
 
 # Import raw data
-raw_train = read.csv('train.csv')
-raw_test = read.csv('test.csv')
-x_train = raw_train[,1:7]
-x_test = raw_test
+raw_train = read.csv('x_train_for_tm.csv')
+raw_test = read.csv('x_test_for_tm.csv')
 
 # Since we only care about content, we only keep the user.id and text columns
-document.data.frame.train = as.data.frame(x_train[,c("user.id", "text")], stringsAsFactors = FALSE)
-document.data.frame.test = as.data.frame(x_test[,c("user.id", "text")], stringsAsFactors = FALSE)
+document.data.frame.train = as.data.frame(raw_train, stringsAsFactors = FALSE)
+document.data.frame.test = as.data.frame(raw_test, stringsAsFactors = FALSE)
 
-# Aggregate the contents with the same user.id
-unique.data.train = aggregate(document.data.frame.train$text,document.data.frame.train['user.id'],paste,collapse=' ') 
-unique.data.test = aggregate(document.data.frame.test$text,document.data.frame.test['user.id'],paste,collapse=' ') 
+names(document.data.frame.train) = c("doc_id", "text")
+names(document.data.frame.test) = c("doc_id", "text")
 
-names(unique.data.train) = c("doc_id", "text")
-names(unique.data.test) = c("doc_id", "text")
-
-blogs.train = VCorpus(DataframeSource(unique.data.train))
-blogs.test = VCorpus(DataframeSource(unique.data.test))
+blogs.train = VCorpus(DataframeSource(document.data.frame.train))
+blogs.test = VCorpus(DataframeSource(document.data.frame.test))
 
 blogs.clean.train = tm_map(blogs.train, stripWhitespace)                        # remove extra whitespace
 blogs.clean.train = tm_map(blogs.clean.train, removeNumbers)                    # remove numbers
-blogs.clean.train = tm_map(blogs.clean.train, removePunctuation)                # remove punctuation
-blogs.clean.train = tm_map(blogs.clean.train, content_transformer(tolower))     # ignore case
-# Fails to remove the stopwords, it takes too long to run.
-# blogs.clean.train = tm_map(blogs.clean.train, removeWords, stopwords("english")) 
 blogs.clean.train = tm_map(blogs.clean.train, stemDocument)                     # stem all words
 
 blogs.clean.test = tm_map(blogs.test, stripWhitespace)                          # remove extra whitespace
 blogs.clean.test = tm_map(blogs.clean.test, removeNumbers)                      # remove numbers
-blogs.clean.test = tm_map(blogs.clean.test, removePunctuation)                  # remove punctuation
-blogs.clean.test = tm_map(blogs.clean.test, content_transformer(tolower))       # ignore case
-# Fails to remove the stopwords, it takes too long to run.
-# blogs.clean.test = tm_map(blogs.clean.test, removeWords, stopwords("english")) 
 blogs.clean.test = tm_map(blogs.clean.test, stemDocument)                       # stem all words
 
 # recompute TF-IDF matrix using the cleaned corpus
@@ -47,42 +33,42 @@ blogs.clean.tfidf.test = DocumentTermMatrix(blogs.clean.test, control = list(wei
 tfidf.99.train = removeSparseTerms(blogs.clean.tfidf.train, 0.99)  
 as.matrix(tfidf.99.train[1:5,1:5])
 # Terms
-# Docs “hey “how         “i’m “if         “it
-#   1    0    0 0.0000000000   0 0.000000000
-#   3    0    0 0.0000000000   0 0.000000000
-#   4    0    0 0.0000000000   0 0.000000000
-#   5    0    0 0.0009035494   0 0.000914463
-#   6    0    0 0.0001436164   0 0.000000000
+# Docs    “hey “how “i’m “if “it
+# 11869    0    0    0   0   0
+# 16332    0    0    0   0   0
+# 6636     0    0    0   0   0
+# 3668     0    0    0   0   0
+# 12196    0    0    0   0   0
 dim(tfidf.99.train)
-# [1] 12880 10881
+# [1] 12880 10876
 
-# There are still too many terms, therefore we remove terms that are absent from 80% of the documents.
-tfidf.80.train = removeSparseTerms(blogs.clean.tfidf.train, 0.80)  
-as.matrix(tfidf.80.train[1:5, 1:5])
+# There are still too many terms, therefore we remove terms that are absent from 85% of the documents.
+tfidf.85.train = removeSparseTerms(blogs.clean.tfidf.train, 0.85)  
+as.matrix(tfidf.85.train[1:5, 1:5])
 # Terms
-# Docs          abl        about         abov      absolut       accept
-#    1 0.0000000000 0.0004583561 0.0000000000 0.0000000000 0.0000000000
-#    3 0.0008859245 0.0004583561 0.0000000000 0.0000000000 0.0000000000
-#    4 0.0000000000 0.0003716492 0.0000000000 0.0000000000 0.0000000000
-#    5 0.0005858814 0.0003599561 0.0002753518 0.0002778795 0.0013301960
-#    6 0.0002560911 0.0006609714 0.0002188316 0.0006625214 0.0001902875
-dim(tfidf.80.train)
-# [1] 12880  1072
+# Docs          abil          abl   about    absolut       accept
+# 11869 0.0000000000 0.0008607249     0 0.0008164717 0.0000000000
+# 16332 0.0003466093 0.0004219853     0 0.0001334298 0.0003833159
+# 6636  0.0000000000 0.0006040646     0 0.0011460146 0.0010974200
+# 3668  0.0000000000 0.0006951296     0 0.0000000000 0.0012628602
+# 12196 0.0000000000 0.0007200442     0 0.0008196288 0.0010464987
+dim(tfidf.85.train)
+# [1] 12880  1409
 
-tfidf.80.test = removeSparseTerms(blogs.clean.tfidf.test, 0.80)  
-as.matrix(tfidf.80.test[1:5, 1:5])
+tfidf.85.test = removeSparseTerms(blogs.clean.tfidf.test, 0.85)  
+as.matrix(tfidf.85.test[1:5, 1:5])
 # Terms
-# Docs          abl        about         abov      absolut       accept
-#   2  0.0000000000 0.0005086734 0.0000000000 0.0000000000 0.0000000000
-#   8  0.0003948863 0.0003004314 0.0000000000 0.0000000000 0.0007039919
-#   9  0.0002712702 0.0007064673 0.0001170513 0.0004798181 0.0005394141
-#   10 0.0015568233 0.0004342942 0.0011643821 0.0005966312 0.0000000000
-#   11 0.0013949666 0.0005306487 0.0000000000 0.0000000000 0.0000000000
-dim(tfidf.80.test)
-# [1] 6440 1041
+# Docs    abil          abl        about absolut      accept
+# 4876     0 0.0000000000 0.0000000000       0 0.000000000
+# 12227    0 0.0003355524 0.0000000000       0 0.000000000
+# 2898     0 0.0000000000 0.0000000000       0 0.000000000
+# 12334    0 0.0010111360 0.0007409608       0 0.000901312
+# 6489     0 0.0000000000 0.0000000000       0 0.000000000
+dim(tfidf.85.test)
+# [1] 6440 1393
 
 # Export the terms to csv file
-df.tfidf.80.train = as.matrix(tfidf.80.train)
-df.tfidf.80.test = as.matrix(tfidf.80.test)
-write.csv(df.tfidf.80.train, file = "tfidf80_train.csv")  # The csv file is too large to be uploaded to gitHub
-write.csv(df.tfidf.80.test, file = "tfidf80_test.csv")  # The csv file is too large to be uploaded to gitHub
+df.tfidf.85.train = as.matrix(tfidf.85.train)
+df.tfidf.85.test = as.matrix(tfidf.85.test)
+write.csv(df.tfidf.85.train, file = "tfidf85_train.csv")  # The csv file is too large to be uploaded to gitHub
+write.csv(df.tfidf.85.test, file = "tfidf85_test.csv")  # The csv file is too large to be uploaded to gitHub
