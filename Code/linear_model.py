@@ -10,7 +10,21 @@ from sklearn.model_selection import KFold
 train_temp = pd.read_csv('x_train.csv')
 test_temp = pd.read_csv('x_test.csv')
 Y_train = pd.read_csv('y_train.csv')
-tfidf = pd.read_csv('Data/tfidf80.csv')
+tfidf_train = pd.read_csv('tfidf80_train.csv')
+tfidf_test = pd.read_csv('tfidf80_test.csv')
+
+# Deal with the tfidf data
+tfidf_train.rename(columns={'Unnamed: 0':'user.id'},inplace=True)
+tfidf_test.rename(columns={'Unnamed: 0':'user.id'},inplace=True)
+
+# The terms in testing set are different from those in training set
+# In order to avoid being informed by the testing set when building the model,
+# we only keep the terms in training set
+cols = tfidf_train.columns     # Get the terms in training set
+tfidf = tfidf_train.append(tfidf_test)  # Combine the tfidf of training set and testing set together
+tfidf = tfidf[cols]            # Only keep terms in training set
+tfidf = tfidf.fillna('0')      # Convert NA to zero
+
 
 # Log transform the highly-skewed age data
 Y_train = np.log(Y_train)  
@@ -80,4 +94,4 @@ df_ridge = pd.DataFrame(np.expm1(ridge.predict(X_test)))
 predictions = pd.DataFrame()
 predictions['user.id'] = complete_data['user.id'].unique()[len(Y_train):,]
 predictions['age'] = round(df_ridge)
-predictions.to_csv('blog_result_1008_v4.csv',index=False)
+# predictions.to_csv('blog_result_1009_V2.csv',index=False)
