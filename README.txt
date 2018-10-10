@@ -18,7 +18,7 @@ Implement a cross-validation approach:
 Get a good score on the parametric linear model modeling for bonus credit
 
 # RESULTS
-Ridge regression: 3.88509
+Ridge regression: 3.87204
 
 # FILES
 Code: All of the code.
@@ -28,9 +28,10 @@ Final_submission: All of the final submissions for Kaggle
 # Code
 # new_blog_script.py: Reads in the raw dataset and conducts basic text analysis
 # data_cleaning.py: Reads in the raw dataset and conducts data prepocessing
-# tfidf.R: Reads in the raw dataset and calculates the term frequency-inverse document frequency
+# text_mining.py: Reads in the raw dataset, aggregates the dataset and conducts basic text cleaning
+# tfidf.R: Reads in the cleaned text and calculates the term frequency-inverse document frequency
 # linear_model.py: Reads in the cleaned data and tfidf data. Builds the final model
 
 
 # Final_submission
-# blog_result_1008_v4.csv: the result with best score
+# blog_result_1009_V4.csv: the result with best score
