@@ -24,6 +24,8 @@ Ridge regression: 3.87204
 Code: All of the code.
 Data: All of the cleaned data.
 Final_submission: All of the final submissions for Kaggle
+Large-size datasets: Some datasets are too large to be uploaded to github and are stored in Google Drive.
+                     https://drive.google.com/open?id=1M1bk-_DDEJxfOb7HrCpxgM712CoAm9zU
 
 # Code
 # new_blog_script.py: Reads in the raw dataset and conducts basic text analysis
